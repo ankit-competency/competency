@@ -1,0 +1,12 @@
+.widefat td {
+    vertical-align: middle !important;
+}
+
+div.error, div.updated {
+    margin-left: 2px;
+}
+
+#err_check {
+    color: red;
+
+}
