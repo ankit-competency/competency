@@ -118,7 +118,7 @@ if ( isset( $addMsg ) ) {
 
                         <td>
 
-                            <input type="text" id="api_password" size="50" name="api_password"
+                            <input type="password" id="api_password" size="50" name="api_password"
                                    value="<?= $api_password; ?>"
                                    required="required"/>
 

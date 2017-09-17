@@ -17,8 +17,8 @@ class Menu
 {
 
     const MENU_SLUG       = 'mail-service-setting';
-    const MENU_PAGE_TITLE = 'Mail Service Integration';
-    const MENU_TITLE      = 'Mail Service Integration';
+    const MENU_PAGE_TITLE = 'Mail Service';
+    const MENU_TITLE      = 'Mail Service';
 
     /**
      * Adds a menu for this plugin to the 'Tools' menu.
