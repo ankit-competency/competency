@@ -27,6 +27,7 @@ add_action( 'plugins_loaded', 'mailServiceCustomAdminSettings' );
  */
 function mailServiceCustomAdminSettings()
 {
+    
     $hooks= new CallHooks();
     $hooks->init();
     $importDefaultTables = new importDefaultTables();
