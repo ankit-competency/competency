@@ -104,9 +104,9 @@ class CallHooks
                            );
                 $oiContact = iContactApi::getInstance();
                 try {
-                    $validCredentials = false;
+                    $validCredentials = true;
                     if($oiContact->getLists()){
-                        $validCredentials = true;
+                        $validCredentials = false;
                     }
                 } catch ( Exception $oException ) {
                     $validCredentials = false;
