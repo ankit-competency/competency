@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @name iContactApi
  * @package     iContact
@@ -31,6 +30,39 @@ class iContactApi
     //////////////////////////////////////////////////////////////////////////////
     /// Singleton ///////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * This is our constuctor and simply checks for
+     * defined constants and configuration values and
+     * then builds the configuration from that
+     *
+     * @access protected
+     * @return iContactApi $this
+     **/
+    protected function __construct()
+    {
+        // Check for constants
+        $aConstantMap = array(
+            // 'ICONTACT_APIVERSION',
+            // 'ICONTACT_APISANDBOXURL',
+            'ICONTACT_APPID'       => 'appId',
+            // 'ICONTACT_APIURL',
+            'ICONTACT_APIUSERNAME' => 'apiUsername',
+            'ICONTACT_APIPASSWORD' => 'apiPassword'
+        );
+        // Loop through the map
+        foreach ( $aConstantMap as $sConstant => $sConfigKey ) {
+            // Check for the defined constant
+            if ( defined( $sConstant ) ) {
+                // Set the configuration key to the contant's value
+                $this->aConfig[ $sConfigKey ] = constant( $sConstant );
+            }
+        }
+
+        // Return instance
+        return $this;
+    }
+
     /**
      * This sets the singleton pattern instance
      *
@@ -72,6 +104,10 @@ class iContactApi
         }
     }
 
+    //////////////////////////////////////////////////////////////////////////////
+    /// Constructor /////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
+
     /**
      * This resets the singleton instance to null
      *
@@ -85,319 +121,23 @@ class iContactApi
         self::$oInstance = null;
     }
 
-    //////////////////////////////////////////////////////////////////////////////
-    /// Constructor /////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////
     /**
-     * This is our constuctor and simply checks for
-     * defined constants and configuration values and
-     * then builds the configuration from that
+     * This method add a contacts to your iContact account
      *
-     * @access protected
-     * @return iContactApi $this
-     **/
-    protected function __construct()
-    {
-        // Check for constants
-        $aConstantMap = array(
-            // 'ICONTACT_APIVERSION',
-            // 'ICONTACT_APISANDBOXURL',
-            'ICONTACT_APPID'       => 'appId',
-            // 'ICONTACT_APIURL',
-            'ICONTACT_APIUSERNAME' => 'apiUsername',
-            'ICONTACT_APIPASSWORD' => 'apiPassword'
-        );
-        // Loop through the map
-        foreach ( $aConstantMap as $sConstant => $sConfigKey ) {
-            // Check for the defined constant
-            if ( defined( $sConstant ) ) {
-                // Set the configuration key to the contant's value
-                $this->aConfig[ $sConfigKey ] = constant( $sConstant );
-            }
-        }
-
-        // Return instance
-        return $this;
-    }
-
-    //////////////////////////////////////////////////////////////////////////////
-    /// Public //////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////
-    /**
-     * This method adds a contact to your iContact account
-     *
-     * @access public
-     *
-     * @param string $sEmail
-     * @param        string [$sStatus]
-     * @param        string [$sPrefix]
-     * @param        string [$sFirstName]
-     * @param        string [$sLastName]
-     * @param        string [$sSuffix]
-     * @param        string [$sStreet]
-     * @param        string [$sStreet2]
-     * @param        string [$sCity]
-     * @param        string [$sState]
-     * @param        string [$sPostalCode]
-     * @param        string [$sPhone]
-     * @param        string [$sFax]
-     * @param        string [$sBusiness]
+     * @param array $aContact
      *
      * @return object
      **/
-    public function addContact( $sEmail, $sStatus = 'normal', $sPrefix = null, $sFirstName = null, $sLastName = null, $sSuffix = null, $sStreet = null, $sStreet2 = null, $sCity = null, $sState = null, $sPostalCode = null, $sPhone = null, $sFax = null, $sBusiness = null )
+    public function addContacts( $aContact )
     {
-        // Valid statuses
-        $aValidStatuses = array(
-            'normal',
-            'bounced',
-            'donotcontact',
-            'pending',
-            'invitable',
-            'deleted'
-        );
-        // Contact placeholder
-        $aContact = array(
-            'email' => $sEmail
-        );
-        // Check for a prefix
-        if ( !empty( $sPrefix ) ) {
-            // Add the new prefix
-            $aContact[ 'prefix' ] = (string)$sPrefix;
-        }
-        // Check for a first name
-        if ( !empty( $sFirstName ) ) {
-            // Add the new first name
-            $aContact[ 'firstName' ] = (string)$sFirstName;
-        }
-        // Check for a last name
-        if ( !empty( $sLastName ) ) {
-            // Add the new last name
-            $aContact[ 'lastName' ] = (string)$sLastName;
-        }
-        // Check for a suffix
-        if ( !empty( $sSuffix ) ) {
-            // Add the new suffix
-            $aContact[ 'suffix' ] = (string)$sSuffix;
-        }
-        // Check for a street
-        if ( !empty( $sStreet ) ) {
-            // Add the new street
-            $aContact[ 'street' ] = (string)$sStreet;
-        }
-        // Check for a street2
-        if ( !empty( $sStreet2 ) ) {
-            // Add the new street 2
-            $aContact[ 'street2' ] = (string)$sStreet2;
-        }
-        // Check for a city
-        if ( !empty( $sCity ) ) {
-            // Add the new city
-            $aContact[ 'city' ] = (string)$sCity;
-        }
-        // Check for a state
-        if ( !empty( $sState ) ) {
-            // Add the new state
-            $aContact[ 'state' ] = (string)$sState;
-        }
-        // Check for a postal code
-        if ( !empty( $sPostalCode ) ) {
-            // Add the new postal code
-            $aContact[ 'postalCode' ] = (string)$sPostalCode;
-        }
-        // Check for a phone number
-        if ( !empty( $sPhone ) ) {
-            // Add the new phone number
-            $aContact[ 'phone' ] = (string)$sPhone;
-        }
-        // Check for a fax number
-        if ( !empty( $sFax ) ) {
-            // Add the new fax number
-            $aContact[ 'fax' ] = (string)$sFax;
-        }
-        // Check for a business name
-        if ( !empty( $sBusiness ) ) {
-            // Add the new business
-            $aContact[ 'business' ] = (string)$sBusiness;
-        }
-        // Check for a valid status
-        if ( !empty( $sStatus ) && in_array( $sStatus, $aValidStatuses ) ) {
-            // Add the new status
-            $aContact[ 'status' ] = $sStatus;
-        } else {
-            $aContact[ 'status' ] = 'normal';
-        }
-        // Make the call
         $aContacts = $this->makeCall(
             "/a/{$this->setAccountId()}/c/{$this->setClientFolderId()}/contacts",
             'POST',
-            array( $aContact ),
+            $aContact,
             'contacts'
         );
 
-        // Return the contact
-        return $aContacts[ 0 ];
-    }
-
-    /**
-     * This method adds a custom field or "term"
-     * to the array of search parameters
-     *
-     * @access public
-     *
-     * @param string $sName
-     * @param string $sValue
-     *
-     * @return iContactApi $this
-     **/
-    public function addCustomQueryField( $sName, $sValue )
-    {
-        // Add the field
-        $this->aSearchParameters[ $sName ] = (string)$sValue;
-
-        // Return instance
-        return $this;
-    }
-
-    /**
-     * This message adds a list to your iContact account
-     *
-     * @access public
-     *
-     * @param string  $sName
-     * @param integer $iWelcomeMessageId
-     * @param         bool   [$bEmailOwnerOnChange]
-     * @param         bool   [$bWelcomeOnManualAdd]
-     * @param         bool   [$bWelcomeOnSignupAdd]
-     * @param         string [$sDescription]
-     * @param         string [$sPublicName]
-     *
-     * @return object
-     **/
-    public function addList( $sName, $iWelcomeMessageId, $bEmailOwnerOnChange = true, $bWelcomeOnManualAdd = false, $bWelcomeOnSignupAdd = false, $sDescription = null, $sPublicName = null )
-    {
-        // Setup the list
-        $aList = array(
-            'name'               => $sName,
-            'welcomeMessageId'   => $iWelcomeMessageId,
-            'emailOwnerOnChange' => intval( $bEmailOwnerOnChange ),
-            'welcomeOnManualAdd' => intval( $bWelcomeOnManualAdd ),
-            'welcomeOnSignupAdd' => intval( $bWelcomeOnSignupAdd ),
-            'description'        => $sDescription,
-            'publicname'         => $sPublicName
-        );
-        // Make the call
-        $aLists = $this->makeCall(
-            "/a/{$this->setAccountId()}/c/{$this->setClientFolderId()}/lists",
-            'POST',
-            array( $aList ),
-            'lists'
-        );
-
-        // Return the list
-        return $aLists[ 0 ];
-    }
-
-    /**
-     * This method adds a message to
-     * your iContact API account
-     *
-     * @access public
-     *
-     * @param string  $sSubject
-     * @param integer $iCampaignId
-     * @param         string  [$sHtmlBody]
-     * @param         string  [$sTextBody]
-     * @param         string  [$sMessageName]
-     * @param         integer [$iListId]
-     * @param         string  [$sMessageType]
-     *
-     * @return object
-     **/
-    public function addMessage( $sSubject, $iCampaignId, $sHtmlBody = null, $sTextBody = null, $sMessageName = null, $iListId = null, $sMessageType = 'normal' )
-    {
-        // Valid message types
-        $aValidMessageTypes = array(
-            'normal',
-            'autoresponder',
-            'welcome',
-            'confirmation'
-        );
-        // Setup the message data
-        $aMessage = array(
-            'campaignId'  => $iCampaignId,
-            'htmlBody'    => $sHtmlBody,
-            'messageName' => $sMessageName,
-            'messageType' => ( in_array( $sMessageType, $aValidMessageTypes ) ? $sMessageType : 'normal' ),
-            'subject'     => $sSubject,
-            'textBody'    => $sTextBody
-        );
-        // Add the message
-        $aNewMessage = $this->makeCall(
-            "/a/{$this->setAccountId()}/c/{$this->setClientFolderId()}/messages",
-            'POST',
-            array( $aMessage ),
-            'messages'
-        );
-
-        // Return the message data
-        return $aNewMessage[ 0 ];
-    }
-
-    /**
-     * This method adds a field to the order by
-     * key in the search parameters array
-     *
-     * @access public
-     *
-     * @param string $sField
-     * @param        string [$sDirection]
-     *
-     * @return iContactApi $this
-     **/
-    public function addOrderBy( $sField, $sDirection = null )
-    {
-        // Check for existing order by parameters
-        if ( empty( $this->aSearchParameters[ 'orderby' ] ) ) {
-            // Check for a direction
-            if ( empty( $sDirection ) ) {
-                // Add just the field
-                $this->aSearchParameters[ 'orderby' ] = (string)$sField;
-            } else {
-                // Add the field and direction
-                $this->aSearchParameters[ 'orderby' ] = (string)"{$sField}:{$sDirection}";
-            }
-        } else {
-            // Check for a direction
-            if ( empty( $sDirection ) ) {
-                // Append just the field
-                $this->aSearchParameters[ 'orderby' ] .= (string)",{$sField}";
-            } else {
-                // Append the field and direction
-                $this->aSearchParameters[ 'orderby' ] .= (string)",{$sField}:{$sDirection}";
-            }
-        }
-
-        // Return failure
-        return false;
-    }
-
-    /**
-     * This method handles the deleting of a single list
-     *
-     * @access public
-     *
-     * @param integer $iListId
-     *
-     * @return bool
-     **/
-    public function deleteList( $iListId )
-    {
-        // Delete the list
-        return $this->makeCall(
-            "/a/{$this->setAccountId()}/c/{$this->setClientFolderId()}/lists/{$iListId}",
-            'delete'
-        );
+        return $aContacts;
     }
 
     /**
@@ -475,7 +215,7 @@ class iContactApi
                     $this->addError( 'No file or data specified for PUT request' );
                 } elseif ( !is_string( $mPostData ) || !file_exists( $mPostData ) ) {
                     // Not a file, so we assume this is just data
-                    $this->sLastRequest = (string)json_encode( $mPostData );
+                    $this->sLastRequest = (string)( $mPostData );
                     curl_setopt( $rHandle, CURLOPT_CUSTOMREQUEST, "PUT" );
                     curl_setopt( $rHandle, CURLOPT_POSTFIELDS, $this->sLastRequest );
                 } else {
@@ -531,7 +271,8 @@ class iContactApi
         // Check for set errors
         if ( !empty( $this->aErrors ) ) {
             // Throw a new exception
-            throw new Exception( 'Errors have occurred and the system cannot continue.  Use getErrors() for details.' );
+            $this->addError( $this->getErrors() );
+            //throw new \Exception($this->getErrors());
         }
         // Check for a total
         if ( !empty( $aResponse->total ) ) {
@@ -554,329 +295,6 @@ class iContactApi
     }
 
     /**
-     * This method sends a message
-     *
-     * @access public
-     *
-     * @param string  $sIncludeListId
-     * @param integer $iMessageId
-     * @param         string [$sExcludeListIds]
-     * @param         string [$sExcludeSegmentIds]
-     * @param         string [$sIncludeSegmentIds]
-     * @param         string [$sScheduledTime]
-     *
-     * @return object
-     **/
-    public function sendMessage( $sIncludeListIds, $iMessageId, $sExcludeListIds = null, $sExcludeSegmentIds = null, $sIncludeSegmentIds = null, $sScheduledTime = null )
-    {
-        // Send the message
-        $aSends = $this->makeCall(
-            "/a/{$this->setAccountId()}/c/{$this->setClientFolderId()}/sends",
-            'POST',
-            array(
-                array(
-                    'excludeListIds'    => $sExcludeListIds,
-                    'excludeSegmentIds' => $sExcludeSegmentIds,
-                    'includeListIds'    => $sIncludeListIds,
-                    'includeSegmentIds' => $sIncludeSegmentIds,
-                    'scheduledTime'     => ( empty( $sScheduledTime )
-                        ? null
-                        : date(
-                            'c',
-                            strtotime( $sScheduledTime )
-                        ) )
-                )
-            ),
-            'sends'
-        );
-
-        // Return the send
-        return $aSends;
-    }
-
-    /**
-     * This method subscribes a contact to a list
-     *
-     * @access public
-     *
-     * @param integer $iContactId
-     * @param integer $iListId
-     * @param string  $sStatus
-     *
-     * @return object
-     **/
-    public function subscribeContactToList( $iContactId, $iListId, $sStatus = 'normal' )
-    {
-        // Valid statuses
-        $aValidStatuses = array(
-            'normal',
-            'pending',
-            'unsubscribed'
-        );
-        // Setup the subscription and make the call
-        $aSubscriptions = $this->makeCall(
-            "/a/{$this->setAccountId()}/c/{$this->setClientFolderId()}/subscriptions",
-            'POST',
-            array(
-                array(
-                    'contactId' => $iContactId,
-                    'listId'    => $iListId,
-                    'status'    => $sStatus
-                )
-            ),
-            'subscriptions'
-        );
-
-        // Return the subscription
-        return $aSubscriptions;
-    }
-
-    /**
-     * This method updates a contact in your iContact account
-     *
-     * @access public
-     *
-     * @param integer $iContactId
-     * @param string  $sEmail
-     * @param string  $sPrefix
-     * @param string  $sFirstName
-     * @param string  $sLastName
-     * @param string  $sSuffix
-     * @param string  $sStreet
-     * @param string  $sStreet2
-     * @param string  $sCity
-     * @param string  $sState
-     * @param string  $sPostalCode
-     * @param string  $sPhone
-     * @param string  $sFax
-     * @param string  $sBusiness
-     * @param string  $sStatus
-     *
-     * @return bool|object
-     **/
-    public function updateContact( $iContactId, $sEmail = null, $sPrefix = null, $sFirstName = null, $sLastName = null, $sSuffix = null, $sStreet = null, $sStreet2 = null, $sCity = null, $sState = null, $sPostalCode = null, $sPhone = null, $sFax = null, $sBusiness = null, $sStatus = null )
-    {
-        // Valid statuses
-        $aValidStatuses = array(
-            'normal',
-            'bounced',
-            'donotcontact',
-            'pending',
-            'invitable',
-            'deleted'
-        );
-        // Contact placeholder
-        $aContact = array();
-        // Check for an email address
-        if ( !empty( $sEmail ) ) {
-            // Add the new email
-            $aContact[ 'email' ] = (string)$sEmail;
-        }
-        // Check for a prefix
-        if ( !empty( $sPrefix ) ) {
-            // Add the new prefix
-            $aContact[ 'prefix' ] = (string)$sPrefix;
-        }
-        // Check for a first name
-        if ( !empty( $sFirstName ) ) {
-            // Add the new first name
-            $aContact[ 'firstName' ] = (string)$sFirstName;
-        }
-        // Check for a last name
-        if ( !empty( $sLastName ) ) {
-            // Add the new last name
-            $aContact[ 'lastName' ] = (string)$sLastName;
-        }
-        // Check for a suffix
-        if ( !empty( $sSuffix ) ) {
-            // Add the new suffix
-            $aContact[ 'suffix' ] = (string)$sSuffix;
-        }
-        // Check for a street
-        if ( !empty( $sStreet ) ) {
-            // Add the new street
-            $aContact[ 'street' ] = (string)$sStreet;
-        }
-        // Check for a street2
-        if ( !empty( $sStreet2 ) ) {
-            // Add the new street 2
-            $aContact[ 'street2' ] = (string)$sStreet2;
-        }
-        // Check for a city
-        if ( !empty( $sCity ) ) {
-            // Add the new city
-            $aContact[ 'city' ] = (string)$sCity;
-        }
-        // Check for a state
-        if ( !empty( $sState ) ) {
-            // Add the new state
-            $aContact[ 'state' ] = (string)$sState;
-        }
-        // Check for a postal code
-        if ( !empty( $sPostalCode ) ) {
-            // Add the new postal code
-            $aContact[ 'postalCode' ] = (string)$sPostalCode;
-        }
-        // Check for a phone number
-        if ( !empty( $sPhone ) ) {
-            // Add the new phone number
-            $aContact[ 'phone' ] = (string)$sPhone;
-        }
-        // Check for a fax number
-        if ( !empty( $sFax ) ) {
-            // Add the new fax number
-            $aContact[ 'fax' ] = (string)$sFax;
-        }
-        // Check for a business name
-        if ( !empty( $sBusiness ) ) {
-            // Add the new business
-            $aContact[ 'business' ] = (string)$sBusiness;
-        }
-        // Check for a valid status
-        if ( !empty( $sStatus ) && in_array( $sStatus, $aValidStatuses ) ) {
-            // Add the new status
-            $aContact[ 'status' ] = $sStatus;
-        }
-        // Make sure the contact isn't empty
-        if ( !empty( $aContact ) ) {
-            // Make the call
-            $oContact = $this->makeCall(
-                "/a/{$this->setAccountId()}/c/{$this->setClientFolderId()}/contacts/{$iContactId}",
-                'POST',
-                array( $aContact ),
-                'contact'
-            );
-
-            // Return the contact
-            return $oContact;
-        }
-
-        // Inevitably return failure
-        return false;
-    }
-
-    /**
-     * This method uploads a CSV file to the iContact API
-     *
-     * @access public
-     *
-     * @param string $sFile
-     * @param        integer [$iListId]
-     * @param        integer [$iUploadId]
-     *
-     * @return string|bool
-     **/
-    public function uploadData( $sFile, $iListId = null, $iUploadId = null )
-    {
-        // Check for an upload ID
-        if ( empty( $iUploadId ) ) {
-            // Make the call
-            $aUploads = $this->makeCall(
-                "/a/{$this->setAccountId()}/c/{$this->setClientFolderId()}/uploads",
-                'POST',
-                array(
-                    array(
-                        'action'  => 'add',
-                        'listIds' => $iListId
-                    )
-                ),
-                'uploads'
-            );
-            // Store the uploadID
-            $iUploadId = $aUploads[ 0 ]->uploadId;
-        }
-        // Upload the data
-        if ( $this->makeCall(
-            "/a/{$this->setAccountId()}/c/{$this->setClientFolderId()}/uploads/{$iUploadId}/data",
-            'PUT',
-            $sFile,
-            'uploadId'
-        )
-        ) {
-            // Loop until the upload is complete
-            while ( true ) {
-                // Grab the upload
-                $aUpload = $this->getUpload( $iUploadId );
-                // Check to see if the upload
-                // has finished uploading
-                if ( $aUpload->status != 'receiving' ) {
-                    // Return the upload
-                    return $this->makeCall(
-                        "/a/{$this->setAccountId()}/c{$this->setClientFolderId()}/uploads/{$iUploadId}/data",
-                        'GET'
-                    );
-                }
-            }
-        }
-
-        // Return failure
-        return false;
-    }
-
-    /**
-     * This message updates a list on your iContact account
-     *
-     * @access public
-     *
-     * @param string  $sName
-     * @param integer $iListId
-     * @param string  $sName
-     * @param integer $iWelcomeMessageId
-     * @param         bool   [$bEmailOwnerOnChange]
-     * @param         bool   [$bWelcomeOnManualAdd]
-     * @param         bool   [$bWelcomeOnSignupAdd]
-     * @param         string [$sDescription]
-     * @param         string [$sPublicName]
-     *
-     * @return object
-     **/
-    public function updateList( $iListId, $sName, $iWelcomeMessageId, $bEmailOwnerOnChange = true, $bWelcomeOnManualAdd = false, $bWelcomeOnSignupAdd = false, $sDescription = null, $sPublicName = null )
-    {
-        // Setup the list
-        $aList = array(
-            'name'               => $sName,
-            'welcomeMessageId'   => $iWelcomeMessageId,
-            'emailOwnerOnChange' => intval( $bEmailOwnerOnChange ),
-            'welcomeOnManualAdd' => intval( $bWelcomeOnManualAdd ),
-            'welcomeOnSignupAdd' => intval( $bWelcomeOnSignupAdd ),
-            'description'        => $sDescription,
-            'publicname'         => $sPublicName
-        );
-
-        // Return the list
-        return $this->makeCall(
-            "/a/{$this->setAccountId()}/c/{$this->setClientFolderId()}/lists/{$iListId}",
-            'POST',
-            $aList,
-            'list'
-        );;
-    }
-
-    /**
-     * This method tells the system whether
-     * or not to use the sandbox or not, the
-     * sandbox is turned off by defualt and
-     * by default this method turns it on
-     *
-     * @access public
-     *
-     * @param bool [$bUse]
-     *
-     * @return iContactApi $this
-     **/
-    public function useSandbox( $bUse = true )
-    {
-        // Set the sandbox status
-        $this->bSandbox = (bool)$bUse;
-
-        // Return instance
-        return $this;
-    }
-
-    //////////////////////////////////////////////////////////////////////////////
-    /// PROTECTED ///////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////
-    /**
      * This method appends an error to the list
      * of errors encountered with the iContact API
      *
@@ -897,6 +315,163 @@ class iContactApi
     }
 
     /**
+     * This method simply returns the base URL for
+     * your API/Sandbox account
+     *
+     * @access public
+     *
+     * @param bool [$bFull]
+     *
+     * @return string
+     **/
+    public function getUrl( $bFull = false )
+    {
+        // Set the sandbox URL
+        $sSandboxUrl = defined( 'ICONTACT_APISANDBOXURL' ) ? constant( 'ICONTACT_APISANDBOXURL' )
+            : 'https://app.sandbox.icontact.com/icp';
+        // Set the production URL
+        $sApiUrl = defined( 'ICONTACT_APIURL' ) ? constant( 'ICONTACT_APIURL' ) : 'https://app.icontact.com/icp';
+        // Determine which one needs to be returned with the URL
+        $sBaseUrl = ( $this->bSandbox === true ) ? $sSandboxUrl : $sApiUrl;
+        // Do we need to return the entire url or just
+        // the base url of the API service
+        if ( $bFull === false ) {
+            // Return the base url
+            return $sBaseUrl;
+        } else {
+            // Return the base url and account details
+            return $sBaseUrl . "/a/{$this->setAccountId()}/c/{$this->setClientFolderId()}";
+        }
+    }
+
+    /**
+     * This method fetches the Account ID
+     * from the iContact API if it has not
+     * already been stored in the instance
+     *
+     * @access public
+     *
+     * @param integer [$iAccountId]
+     *
+     * @return integer
+     **/
+    public function setAccountId( $iAccountId = null )
+    {
+        // Check for an overriding
+        // Account ID
+        if ( !empty( $iAccountId ) ) {
+            // Override the Account ID
+            $this->iAccountId = (integer)$iAccountId;
+        } else {
+            // Check to see if the
+            // Account ID has already
+            // been stored in the
+            // instance
+            if ( empty( $this->iAccountId ) ) {
+                // Load the Account ID
+                if ( $aAccounts = $this->makeCall( '/a/', 'get', null, 'accounts' ) ) {
+                    // Set the account
+                    $aAccount = $aAccounts[ 0 ];
+                    // Make sure the account is active
+                    if ( intval( $aAccount->enabled ) === 1 ) {
+                        // The account is active
+                        // set the Account ID
+                        $this->iAccountId = (integer)$aAccount->accountId;
+                    } else {
+                        // Set an error, for this account
+                        // has been disabled
+                        $this->addError( 'Your account has been disabled.' );
+                    }
+                }
+            }
+        }
+
+        // Inevitably return instance
+        return $this->iAccountId;
+    }
+
+    //////////////////////////////////////////////////////////////////////////////
+    /// PROTECTED ///////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * This method fetches the Client
+     * Folder ID from the iContact API
+     * if it has not already been stored
+     * in the instance and the Account ID
+     * has also been stored in the instance
+     *
+     * @access public
+     *
+     * @param integer [$iClientFolderId]
+     *
+     * @return integer
+     **/
+    public function setClientFolderId( $iClientFolderId = null )
+    {
+        // Check for an overriding
+        // Client Folder ID
+        if ( !empty( $iClientFolderId ) ) {
+            // Set the Client Folder ID
+            $this->iClientFolderId = (integer)$iClientFolderId;
+        } elseif ( empty( $this->iClientFolderId ) ) {
+            // Check for an Account ID
+            if ( empty( $this->iAccountId ) ) {
+                // Set the Account ID
+                $this->setAccountId();
+            }
+            // Set the resource
+            $sResource = (string)"/a/{$this->iAccountId}/c/";
+            // Find the Client Folder ID
+            if ( $aClients = $this->makeCall( $sResource, 'get', null, 'clientfolders' ) ) {
+                if ( empty( $aClients ) ) {
+                    // Add an error, for there
+                    // are no client folders
+                    $this->addError( 'No client folders were found for this account.' );
+                } else {
+                    // Grab the default client folder
+                    $aClient = $aClients[ 0 ];
+                    // Set the Client Folder ID
+                    $this->iClientFolderId = (integer)$aClient->clientFolderId;
+                }
+            }
+        }
+
+        // Inevitably return instance
+        return $this->iClientFolderId;
+    }
+
+    /**
+     * This method builds the header array
+     * for making calls to the API
+     *
+     * @access public
+     * @return array
+     **/
+    public function getHeaders()
+    {
+        // Return the headers
+        return array(
+            'Except:',
+            'Accept:  application/json',
+            'Content-type:  application/json',
+            'Api-Version:  ' . ( defined( 'ICONTACT_APIVERSION' ) ? constant( 'ICONTACT_APIVERSION' ) : '2.2' ),
+            'Api-AppId:  ' .
+            ( !empty( $this->aConfig[ 'appId' ] ) ? $this->aConfig[ 'appId' ] : constant( 'ICONTACT_APPID' ) ),
+            'Api-Username:  ' . ( !empty( $this->aConfig[ 'apiUsername' ] )
+                ? $this->aConfig[ 'apiUsername' ]
+                : constant(
+                    'ICONTACT_APIUSERNAME'
+                ) ),
+            'Api-Password:  ' . ( !empty( $this->aConfig[ 'apiPassword' ] )
+                ? $this->aConfig[ 'apiPassword' ]
+                : constant(
+                    'ICONTACT_APIPASSWORD'
+                ) )
+        );
+    }
+
+    /**
      * This method appends a warning to the list
      * of warnings encountered with the iContact API
      *
@@ -913,56 +488,6 @@ class iContactApi
 
         // Return instance
         return $this;
-    }
-
-    //////////////////////////////////////////////////////////////////////////////
-    /// Getters /////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////
-    /**
-     * This method grabs the campaigns associated
-     * your iContact account
-     *
-     * @access public
-     * @return object
-     **/
-    public function getCampaigns()
-    {
-        // Make the call and return the data
-        return $this->makeCall( "/a/{$this->setAccountId()}/c/{$this->setClientFolderId()}/campaigns", 'GET' );
-    }
-
-    /**
-     * This method grabs a single contact
-     * from your iContact Account
-     *
-     * @access public
-     *
-     * @param integer $iContactId
-     *
-     * @return object
-     **/
-    public function getContact( $iContactId )
-    {
-        // Make the call and return the data
-        return $this->makeCall(
-            "/a/{$this->setAccountId()}/c/{$this->setClientFolderId()}/contacts/{$iContactId}",
-            'GET',
-            null,
-            'contact'
-        );
-    }
-
-    /**
-     * This method grabs the contacts associated
-     * with you iContact API account
-     *
-     * @access public
-     * @return array
-     **/
-    public function getContacts()
-    {
-        // Make the call and return the data
-        return $this->makeCall( "/a/{$this->setAccountId()}/c/{$this->setClientFolderId()}/contacts", 'GET' );
     }
 
     /**
@@ -986,31 +511,88 @@ class iContactApi
     }
 
     /**
-     * This method builds the header array
-     * for making calls to the API
+     * This method subscribes contacts to a list
      *
      * @access public
-     * @return array
+     *
+     * @param array $contacts
+     *
+     * @return object
      **/
-    public function getHeaders()
+    public function subscribeContactsToLists( $contacts )
     {
-        // Return the headers
-        return array(
-            'Except:',
-            'Accept:  application/json',
-            'Content-type:  application/json',
-            'Api-Version:  ' . ( defined( 'ICONTACT_APIVERSION' ) ? constant( 'ICONTACT_APIVERSION' ) : '2.2' ),
-            'Api-AppId:  ' .
-            ( !empty( $this->aConfig[ 'appId' ] ) ? $this->aConfig[ 'appId' ] : constant( 'ICONTACT_APPID' ) ),
-            'Api-Username:  ' . ( !empty( $this->aConfig[ 'apiUsername' ] )
-                ? $this->aConfig[ 'apiUsername' ] : constant(
-                    'ICONTACT_APIUSERNAME'
-                ) ),
-            'Api-Password:  ' . ( !empty( $this->aConfig[ 'apiPassword' ] )
-                ? $this->aConfig[ 'apiPassword' ] : constant(
-                    'ICONTACT_APIPASSWORD'
-                ) )
+        $aSubscriptions = $this->makeCall(
+            "/a/{$this->setAccountId()}/c/{$this->setClientFolderId()}/subscriptions",
+            'POST',
+            $contacts,
+            'subscriptions'
         );
+
+        return $aSubscriptions;
+    }
+
+    /**
+     * This method uploads a CSV file to the iContact API
+     *
+     * @access public
+     *
+     * @param string $sFile
+     * @param        integer [$iListId]
+     * @param        integer [$iUploadId]
+     *
+     * @return string|bool
+     **/
+    public function uploadData( $sFile, $iListId = null, $iUploadId = null )
+    {
+        // Check for an upload ID
+        if ( empty( $iUploadId ) ) {
+            $aUploads = $this->makeCall(
+                "/a/{$this->setAccountId()}/c/{$this->setClientFolderId()}/uploads",
+                'POST',
+                array(
+                    array(
+                        'action'  => 'add',
+                        'listIds' => $iListId
+                    )
+                ),
+                'uploads'
+            );
+            // Store the uploadID
+            $iUploadId = $aUploads[ 0 ]->uploadId;
+        }
+        if ( $this->makeCall(
+            "/a/{$this->setAccountId()}/c/{$this->setClientFolderId()}/uploads/{$iUploadId}/data",
+            'PUT',
+            $sFile,
+            'uploadId'
+        )
+        ) {
+            return true;
+        }
+
+        // Return failure
+        return false;
+    }
+
+    /**
+     * This method tells the system whether
+     * or not to use the sandbox or not, the
+     * sandbox is turned off by defualt and
+     * by default this method turns it on
+     *
+     * @access public
+     *
+     * @param bool [$bUse]
+     *
+     * @return iContactApi $this
+     **/
+    public function useSandbox( $bUse = true )
+    {
+        // Set the sandbox status
+        $this->bSandbox = (bool)$bUse;
+
+        // Return instance
+        return $this;
     }
 
     /**
@@ -1079,43 +661,6 @@ class iContactApi
     }
 
     /**
-     * This method lists the opens of a
-     * single message based on the messageID
-     *
-     * @access public
-     *
-     * @param integer iMessageId
-     *
-     * @return integer
-     **/
-    public function getMessageOpens( $iMessageId )
-    {
-        // Make the call and return the data
-        return $this->makeCall(
-            "/a/{$this->setAccountId()}/c/{$this->setClientFolderId()}/messages/{$iMessageId}/opens",
-            'GET',
-            null,
-            'total'
-        );
-    }
-
-    public function getMessages( $sType = null )
-    {
-        // Check for a message type
-        if ( !empty( $sType ) ) {
-            $this->addCustomQueryField( 'messageType', $sType );
-        }
-
-        // Return the messages
-        return $this->makeCall(
-            "/a/{$this->setAccountId()}/c/{$this->setClientFolderId()}/messages",
-            'GET',
-            null,
-            'messages'
-        );
-    }
-
-    /**
      * This method returns the URL
      * that the last API request
      * called
@@ -1143,35 +688,9 @@ class iContactApi
         return $this->iTotal;
     }
 
-    /**
-     * This method simply returns the base URL for
-     * your API/Sandbox account
-     *
-     * @access public
-     *
-     * @param bool [$bFull]
-     *
-     * @return string
-     **/
-    public function getUrl( $bFull = false )
-    {
-        // Set the sandbox URL
-        $sSandboxUrl = defined( 'ICONTACT_APISANDBOXURL' ) ? constant( 'ICONTACT_APISANDBOXURL' )
-            : 'https://app.sandbox.icontact.com/icp';
-        // Set the production URL
-        $sApiUrl = defined( 'ICONTACT_APIURL' ) ? constant( 'ICONTACT_APIURL' ) : 'https://app.icontact.com/icp';
-        // Determine which one needs to be returned with the URL
-        $sBaseUrl = ( $this->bSandbox === true ) ? $sSandboxUrl : $sApiUrl;
-        // Do we need to return the entire url or just
-        // the base url of the API service
-        if ( $bFull === false ) {
-            // Return the base url
-            return $sBaseUrl;
-        } else {
-            // Return the base url and account details
-            return $sBaseUrl . "/a/{$this->setAccountId()}/c/{$this->setClientFolderId()}";
-        }
-    }
+    //////////////////////////////////////////////////////////////////////////////
+    /// Setters /////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
 
     /**
      * This method grabs a specific upload
@@ -1185,20 +704,7 @@ class iContactApi
     public function getUpload( $iUploadId )
     {
         // Return the upload data
-        return $this->makeCall( "/a/{$this->setAccountId()}/c{$this->setClientFolderId()}/uploads/{$iUploadId}/data" );
-    }
-
-    /**
-     * This method grabs the uploads associated
-     * with your iContact Account
-     *
-     * @access public
-     * @return array
-     **/
-    public function getUploads()
-    {
-        // Return the uploads
-        return $this->makeCall( "/a/{$this->setAccountId()}/c{$this->setClientFolderId()}/uploads" );
+        return $this->makeCall( "/a/{$this->setAccountId()}/c/{$this->setClientFolderId()}/uploads/{$iUploadId}" );
     }
 
     /**
@@ -1212,102 +718,6 @@ class iContactApi
     {
         // Return the current system warnings
         return $this->aWarnings;
-    }
-
-    //////////////////////////////////////////////////////////////////////////////
-    /// Setters /////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////
-    /**
-     * This method fetches the Account ID
-     * from the iContact API if it has not
-     * already been stored in the instance
-     *
-     * @access public
-     *
-     * @param integer [$iAccountId]
-     *
-     * @return integer
-     **/
-    public function setAccountId( $iAccountId = null )
-    {
-        // Check for an overriding
-        // Account ID
-        if ( !empty( $iAccountId ) ) {
-            // Override the Account ID
-            $this->iAccountId = (integer)$iAccountId;
-        } else {
-            // Check to see if the
-            // Account ID has already
-            // been stored in the
-            // instance
-            if ( empty( $this->iAccountId ) ) {
-                // Load the Account ID
-                if ( $aAccounts = $this->makeCall( '/a/', 'get', null, 'accounts' ) ) {
-                    // Set the account
-                    $aAccount = $aAccounts[ 0 ];
-                    // Make sure the account is active
-                    if ( intval( $aAccount->enabled ) === 1 ) {
-                        // The account is active
-                        // set the Account ID
-                        $this->iAccountId = (integer)$aAccount->accountId;
-                    } else {
-                        // Set an error, for this account
-                        // has been disabled
-                        $this->addError( 'Your account has been disabled.' );
-                    }
-                }
-            }
-        }
-
-        // Inevitably return instance
-        return $this->iAccountId;
-    }
-
-    /**
-     * This method fetches the Client
-     * Folder ID from the iContact API
-     * if it has not already been stored
-     * in the instance and the Account ID
-     * has also been stored in the instance
-     *
-     * @access public
-     *
-     * @param integer [$iClientFolderId]
-     *
-     * @return integer
-     **/
-    public function setClientFolderId( $iClientFolderId = null )
-    {
-        // Check for an overriding
-        // Client Folder ID
-        if ( !empty( $iClientFolderId ) ) {
-            // Set the Client Folder ID
-            $this->iClientFolderId = (integer)$iClientFolderId;
-        } elseif ( empty( $this->iClientFolderId ) ) {
-            // Check for an Account ID
-            if ( empty( $this->iAccountId ) ) {
-                // Set the Account ID
-                $this->setAccountId();
-            }
-            // Set the resource
-            $sResource = (string)"/a/{$this->iAccountId}/c/";
-            // Find the Client Folder ID
-            if ( $aClients = $this->makeCall( $sResource, 'get', null, 'clientfolders' ) ) {
-                if ( empty( $aClients ) ) {
-                    // Add an error, for there
-                    // are no client folders
-                    $this->addError( 'No client folders were found for this account.' );
-                } else {
-                    // Grab the default client folder
-                    $aClient = $aClients[ 0 ];
-                    // Set the Client Folder ID
-                    $this->iClientFolderId = (integer)$aClient->clientFolderId;
-                }
-            }
-        }
-
-        // Inevitably return instance
-        return $this->iClientFolderId;
     }
 
     /**
@@ -1329,42 +739,4 @@ class iContactApi
         return $this;
     }
 
-    /**
-     * This method sets the result limit
-     * for GET requests to the iContact API
-     *
-     * @access public
-     *
-     * @param integer $iLimit
-     *
-     * @return iContactApi $this
-     **/
-    public function setLimit( $iLimit )
-    {
-        // Set the limit in the search parameters
-        $this->aSearchParameters[ 'limit' ] = (integer)$iLimit;
-
-        // Return instance
-        return $this;
-    }
-
-    /**
-     * This method sets the result index
-     * offset for paginating results from
-     * GET requests to the iContact API
-     *
-     * @access public
-     *
-     * @param integer $iOffset
-     *
-     * @return iContactApi $this
-     **/
-    public function setOffset( $iOffset )
-    {
-        // Set the offset in the search parameters
-        $this->aSearchParameters[ 'offset' ] = (integer)$iOffset;
-
-        // Return instance
-        return $this;
-    }
 }

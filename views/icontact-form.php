@@ -47,9 +47,9 @@ if ( isset( $addMsg ) ) {
 
             <form method="POST" action="<?php echo admin_url( 'admin-ajax.php' ); ?>">
 
-                <?php wp_nonce_field( 'iContactIntegration', 'ankit-is-good-developer' ); ?>
+                <?php wp_nonce_field( 'saveIContactIntegration', 'ANKIT_GUPTA_RAHUL_GUPTA' ); ?>
 
-                <input name="action" value="iContactIntegration" type="hidden"/>
+                <input name="action" value="saveIContactIntegration" type="hidden"/>
                 <input name="user_id" value="<?= $user_id; ?>" type="hidden"/>
                 <input name="id" value="<?= $id; ?>" type="hidden"/>
 
