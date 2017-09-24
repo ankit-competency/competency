@@ -2,6 +2,9 @@
 
 class CallHooks
 {
+    const SUCCESS = 'success';
+    const ERROR   = 'error';
+
     /**
      * Adds a menu for this plugin to the 'Tools' menu.
      */
@@ -25,6 +28,13 @@ class CallHooks
             array(
                 $this,
                 'saveIContactIntegration'
+            )
+        );
+        add_action(
+            'wp_ajax_bulkImportUsers',
+            array(
+                $this,
+                'bulkImportUsers'
             )
         );
         add_filter(
@@ -81,6 +91,90 @@ class CallHooks
         wp_enqueue_script( 'custom-script-mail-service' );
     }
 
+    public function bulkImportUsers()
+    {
+        if ( empty( $_POST ) || !wp_verify_nonce( $_POST[ 'ANKIT_GUPTA_RAHUL_GUPTA' ], 'bulkImportUsers' ) ) {
+            echo 'You targeted the right function, but sorry, your nonce did not verify.';
+            die();
+        } else {
+            $required        = explode( '&', $_SERVER[ 'HTTP_REFERER' ] );
+            $required        = isset( $required[ 0 ] ) ? $required[ 0 ] : $_SERVER[ 'HTTP_REFERER' ];
+            $listsID         = sanitize_text_field( $_POST[ 'i_contact_list' ] );
+            $blogUsers       = get_users();
+            $importUsersData = [ ];
+            $userCount       = 1;
+            foreach ( $blogUsers as $user ) {
+                if ( get_current_user_id() != $user->ID ) {
+                    $importUsersData[] = [
+                        'email'      => $user->user_email,
+                        'first_name' => $user->first_name,
+                        'last_name'  => $user->last_name
+                    ];
+                    $userCount++;
+                }
+            }
+            $result = $this->importUsersToIContact( $importUsersData, $listsID );
+            if ( $result[ 'status' ] == self::SUCCESS ) {
+                $displayUrl = $required . "&addMsg=" . $userCount .
+                              " users imported successfully to IContact. It may take to show on IContact Dashboard";
+            } else {
+                $displayUrl = $required . '&errorMsg=Nothing have to import in IContact';
+            }
+            echo "<script type='text/javascript'>location.href = '" . $displayUrl . "';</script>";
+            die( 0 );
+        }
+    }
+
+    public function importUsersToIContact( $importUsersData, $listID )
+    {
+        $iContactApi = $this->initiateIContactObject();
+        $counter     = 0;
+        $requestStr  = "[email],[fname],[lname]\n";
+        foreach ( $importUsersData as $importUser ) {
+            $requestStr .= sprintf(
+                               "%s,%s,%s",
+                               $importUser[ 'email' ],
+                               $importUser[ 'first_name' ],
+                               $importUser[ 'last_name' ]
+                           ) . "\n";
+            $counter++;
+        }
+        if ( $counter > 0 ) {
+            $iContactApi->uploadData( $requestStr, $listID );
+
+            return [
+                'status' => self::SUCCESS,
+                'msg'    => 'Successfully user imported to IContact'
+            ];
+        } else {
+            return [
+                'status' => self::ERROR,
+                'msg'    => 'Nothing have to import in IContact'
+            ];
+        }
+    }
+
+    public function initiateIContactObject()
+    {
+        global $wpdb;
+        $table_name          = $wpdb->prefix . "ecti_i_contact_setting";
+        $current_user_id     = get_current_user_id();
+        $mailServiceIContact = $wpdb->get_row(
+            $wpdb->prepare( "SELECT * FROM $table_name where user_id= %d", $current_user_id ),
+            ARRAY_A
+        );
+        iContactApi::getInstance()
+                   ->setConfig(
+                       array(
+                           'appId'       => $mailServiceIContact[ 'app_id' ],
+                           'apiPassword' => $mailServiceIContact[ 'api_password' ],
+                           'apiUsername' => $mailServiceIContact[ 'api_username' ]
+                       )
+                   );
+
+        return iContactApi::getInstance();
+    }
+
     public function saveIContactIntegration()
     {
         if ( empty( $_POST ) || !wp_verify_nonce( $_POST[ 'ANKIT_GUPTA_RAHUL_GUPTA' ], 'saveIContactIntegration' ) ) {
@@ -104,14 +198,13 @@ class CallHooks
                            );
                 $oiContact = iContactApi::getInstance();
                 try {
-                    $validCredentials = true;
-                    if($oiContact->getLists()){
-                        $validCredentials = false;
+                    $validCredentials = false;
+                    if ( $oiContact->getLists() ) {
+                        $validCredentials = true;
                     }
                 } catch ( Exception $oException ) {
                     $validCredentials = false;
                 }
-
                 if ( $validCredentials ) {
                     $userId          = sanitize_text_field( $_POST[ 'user_id' ] );
                     $id              = sanitize_text_field( $_POST[ 'id' ] );
@@ -188,8 +281,11 @@ class CallHooks
         if ( 'userImport' != $column_name ) {
             return $val;
         }
-        $button = '<a href="javascript:void(0)"  data-userId="' . $user_id .
-                  '"class="button button-primary button-large openPopUpListing">Import User</a>';
+        $loaderIcon = '<img id="importLoaderImage" style="display: none;" src="' . MAIL_SERVICE_DIRECTORY_PLUGIN_URL .
+                      'assets/img/loading-gif.gif" />';
+        $button     = '<a href="javascript:void(0)"  data-userId="' . $user_id .
+                      '"class="button button-primary button-large openPopUpListing">' . $loaderIcon .
+                      ' Import User</a>';
 
         return $button;
     }
@@ -211,28 +307,7 @@ class CallHooks
         return $lists;
     }
 
-    public function initiateIContactObject()
-    {
-        global $wpdb;
-        $table_name          = $wpdb->prefix . "ecti_i_contact_setting";
-        $current_user_id     = get_current_user_id();
-        $mailServiceIContact = $wpdb->get_row(
-            $wpdb->prepare( "SELECT * FROM $table_name where user_id= %d", $current_user_id ),
-            ARRAY_A
-        );
-        iContactApi::getInstance()
-                   ->setConfig(
-                       array(
-                           'appId'       => $mailServiceIContact[ 'app_id' ],
-                           'apiPassword' => $mailServiceIContact[ 'api_password' ],
-                           'apiUsername' => $mailServiceIContact[ 'api_username' ]
-                       )
-                   );
-
-        return iContactApi::getInstance();
-    }
-
-    public function getImportUserDetails( $userId )
+    protected function getImportUserDetails( $userId )
     {
         $importUser = get_userdata( $userId );
         $email      = $importUser->user_email;
@@ -246,11 +321,10 @@ class CallHooks
         ];
     }
 
-    public function triggerIContactImport()
+    protected function triggerIContactImport()
     {
         if ( isset( $_POST[ 'formData' ] ) ) {
             parse_str( $_POST[ 'formData' ], $formData );
-            //print_r( $formData );
             $iContactLists = $this->getIContactListDetails();
             $listIdSet     = [ ];
             foreach ( $iContactLists as $list ) {
@@ -260,8 +334,7 @@ class CallHooks
             if ( in_array( $formData[ 'i_contact_list' ], $listIdSet ) ) {
                 $importUsersData[] = $importUserData;
                 $result            = $this->importUsersToIContact( $importUsersData, $formData[ 'i_contact_list' ] );
-
-                echo  json_encode( $result );
+                echo json_encode( $result );
             } else {
                 echo json_encode(
                     [
@@ -272,35 +345,6 @@ class CallHooks
             }
         }
         die( 0 );
-    }
-
-    public function importUsersToIContact( $importUsersData, $listID )
-    {
-        $iContactApi = $this->initiateIContactObject();
-        $counter     = 0;
-        $requestStr  = "[email],[fname],[lname]\n";
-        foreach ( $importUsersData as $importUser ) {
-            $requestStr .= sprintf(
-                               "%s,%s,%s",
-                               $importUser[ 'email' ],
-                               $importUser[ 'first_name' ],
-                               $importUser[ 'last_name' ]
-                           ) . "\n";
-            $counter++;
-        }
-        if ( $counter > 0 ) {
-            $iContactApi->uploadData( $requestStr, $listID );
-
-            return [
-                'status' => 'success',
-                'msg'    => 'Successfully user imported to IContact'
-            ];
-        } else {
-            return [
-                'status' => 'error',
-                'msg'    => 'Nothing have to import in IContact'
-            ];
-        }
     }
 
 }

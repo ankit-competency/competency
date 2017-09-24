@@ -23,17 +23,22 @@ $addMsg   = filter_input( INPUT_GET, 'addMsg', FILTER_SANITIZE_SPECIAL_CHARS );
 $errorMsg = filter_input( INPUT_GET, 'errorMsg', FILTER_SANITIZE_SPECIAL_CHARS );
 if ( isset( $addMsg ) ) {
     ?>
-    <div class="updated below-h2" id="message">
+    <div id="message" class="updated notice is-dismissible">
         <p><?php echo $addMsg; ?></p>
+        <button type="button" class="notice-dismiss"><span class="screen-reader-text">Dismiss this notice.</span>
+        </button>
     </div>
 <?php } ?>
 
 <?php if ( isset( $errorMsg ) ) {
     ?>
-    <div class="error below-h2" id="message">
+    <div id="message" class="error notice is-dismissible">
         <p><?php echo $errorMsg; ?></p>
+        <button type="button" class="notice-dismiss"><span class="screen-reader-text">Dismiss this notice.</span>
+        </button>
     </div>
 <?php } ?>
+
 <table class="wrap" style="width: 100%">
     <tr>
         <td>
@@ -146,4 +151,85 @@ if ( isset( $addMsg ) ) {
 
         </td>
     </tr>
+    <?php if ( $mailServiceIContact ) { ?>
+        <?php
+        $callHook = new CallHooks();
+        $lists    = $callHook->getIContactListDetails();
+        ?>
+        <tr>
+            <td colspan="4">
+
+
+                <form method="POST" action="<?php echo admin_url( 'admin-ajax.php' ); ?>">
+
+                    <?php wp_nonce_field( 'bulkImportUsers', 'ANKIT_GUPTA_RAHUL_GUPTA' ); ?>
+
+                    <input name="action" value="bulkImportUsers" type="hidden"/>
+                    <input name="user_id" value="<?= $user_id; ?>" type="hidden"/>
+
+                    <table class="widefat">
+
+                        <thead>
+
+                        <tr>
+
+                            <th colspan="2">
+
+                                <h3> <?php esc_html_e(
+                                        'Import All Users in IContact',
+                                        'Mail_Service_Admin_Settings'
+                                    ); ?></h3>
+
+                            </th>
+
+                        </tr>
+
+                        </thead>
+
+                        <tbody>
+
+
+                        <tr>
+
+                            <td>
+
+                                <h3>
+                                    <?php esc_html_e( 'Lists:', 'Mail_Service_Admin_Settings' ); ?>
+                                </h3>
+                            </td>
+
+                            <td>
+
+                                <select id="i_contact_list" name="i_contact_list">
+                                    <?php foreach ( $lists as $key => $list ) { ?>
+                                        <option value="<?php echo $list->listId; ?>" <?php if ( !$key ) {
+                                            echo 'selected="selected"';
+                                        } ?> ><?php echo $list->name; ?></option>
+                                    <?php } ?>
+                                </select>
+
+                            </td>
+
+                        </tr>
+
+                        <tr>
+
+                            <td colspan="2">
+
+                                <input type="submit" value="Submit" name="submit" class="button button-primary"/>
+
+                            </td>
+
+                        </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </form>
+
+
+            </td>
+        </tr>
+    <?php } ?>
 </table>
