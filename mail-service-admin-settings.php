@@ -1,10 +1,10 @@
 <?php
 /**
- * Plugin Name: Export Contacts to IContact
+ * Plugin Name: Import Users to IContact
  * Plugin URI:
- * Description: A plugins to Connect IContact Account So that Wordpress Admin can Import user to IContact Dashboard.
+ * Description: This plugins will add import button into users listing and also admin can import all users to IContact.
  * Version: 1.0
- * Author: Rahul Gupta, Ankit Gupta
+ * Author: Ankit Gupta, Rahul Gupta
  * Author URI:
  * License: GPL2
  */
@@ -27,8 +27,7 @@ add_action( 'plugins_loaded', 'mailServiceCustomAdminSettings' );
  */
 function mailServiceCustomAdminSettings()
 {
-    
-    $hooks= new CallHooks();
+    $hooks = new CallHooks();
     $hooks->init();
     $importDefaultTables = new importDefaultTables();
     register_activation_hook( __FILE__, $importDefaultTables->createPluginDatabaseTable() );

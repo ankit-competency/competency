@@ -6,14 +6,16 @@ class CallHooks
     const ERROR   = 'error';
 
     /**
-     * Adds a menu for this plugin to the 'Tools' menu.
+     * Call all required features to WordPress Admin
      */
     public function __construct()
     {
         $subMenuPage = new SubMenuPage();
         $subMenuPage->init();
     }
-
+    /**
+     * Add All required hooks on initiate of class
+    */
     public function init()
     {
         add_action(
@@ -69,28 +71,10 @@ class CallHooks
         );
     }
 
-    public function mailServiceCustomAdminStyle()
-    {
-        wp_enqueue_style(
-            'custom-style-mail-service',
-            MAIL_SERVICE_DIRECTORY_PLUGIN_URL . 'assets/css/custom-style.css'
-        );
-        wp_register_script(
-            'custom-script-mail-service',
-            MAIL_SERVICE_DIRECTORY_PLUGIN_URL . 'assets/scripts/customScript.js',
-            array(),
-            '1.0.0',
-            true
-        );
-        // Localize the script with new data
-        $translation_array = array(
-            'URL' => admin_url( 'admin-ajax.php' ),
-        );
-        wp_localize_script( 'custom-script-mail-service', 'ADMIN_AJAX', $translation_array );
-        // Enqueued script with localized data.
-        wp_enqueue_script( 'custom-script-mail-service' );
-    }
 
+    /**
+     * Using for Bulk Import users to IContact
+    */
     public function bulkImportUsers()
     {
         if ( empty( $_POST ) || !wp_verify_nonce( $_POST[ 'ANKIT_GUPTA_RAHUL_GUPTA' ], 'bulkImportUsers' ) ) {
@@ -125,6 +109,14 @@ class CallHooks
         }
     }
 
+
+    /**
+     * Single user Import to IContact
+     * @param $importUsersData
+     * @param $listID
+     *
+     * @return array
+     */
     public function importUsersToIContact( $importUsersData, $listID )
     {
         $iContactApi = $this->initiateIContactObject();
@@ -154,6 +146,9 @@ class CallHooks
         }
     }
 
+    /**
+     * Initiate IContact Object with call APIs
+    */
     public function initiateIContactObject()
     {
         global $wpdb;
@@ -175,6 +170,10 @@ class CallHooks
         return iContactApi::getInstance();
     }
 
+
+    /**
+     * Save the details of IContact
+    */
     public function saveIContactIntegration()
     {
         if ( empty( $_POST ) || !wp_verify_nonce( $_POST[ 'ANKIT_GUPTA_RAHUL_GUPTA' ], 'saveIContactIntegration' ) ) {
@@ -253,6 +252,14 @@ class CallHooks
         }
     }
 
+    /**
+     *
+     * Add new column to Import user label
+     *
+     * @param $column
+     *
+     * @return mixed
+     */
     public function userImport( $column )
     {
         $isDetails = $this->getIContactDetailsOfCurrentUser();
@@ -263,7 +270,10 @@ class CallHooks
         return $column;
     }
 
-    protected function getIContactDetailsOfCurrentUser()
+    /**
+     * This is return IContact Details of Current User
+    */
+    public function getIContactDetailsOfCurrentUser()
     {
         global $wpdb;
         $table_name          = $wpdb->prefix . "ecti_i_contact_setting";
@@ -276,6 +286,14 @@ class CallHooks
         return $mailServiceIContact;
     }
 
+    /**
+     * Add Button for all users listed
+     * @param $val
+     * @param $column_name
+     * @param $user_id
+     *
+     * @return string
+     */
     public function userImportColumn( $val, $column_name, $user_id )
     {
         if ( 'userImport' != $column_name ) {
@@ -290,6 +308,9 @@ class CallHooks
         return $button;
     }
 
+    /**
+     *  Show Import User PopUp View
+     */
     public function openPopUpImportWizard()
     {
         $iContactLists  = $this->getIContactListDetails();
@@ -299,6 +320,9 @@ class CallHooks
         die( 0 );
     }
 
+    /**
+     *  Get Listing of IContact
+     */
     public function getIContactListDetails()
     {
         $iContactApi = $this->initiateIContactObject();
@@ -307,7 +331,13 @@ class CallHooks
         return $lists;
     }
 
-    protected function getImportUserDetails( $userId )
+    /**
+     * Get details of User
+     * @param $userId
+     *
+     * @return array
+     */
+    public function getImportUserDetails( $userId )
     {
         $importUser = get_userdata( $userId );
         $email      = $importUser->user_email;
@@ -321,7 +351,11 @@ class CallHooks
         ];
     }
 
-    protected function triggerIContactImport()
+
+    /**
+     * Use to Import User
+     */
+    public function triggerIContactImport()
     {
         if ( isset( $_POST[ 'formData' ] ) ) {
             parse_str( $_POST[ 'formData' ], $formData );
@@ -345,6 +379,32 @@ class CallHooks
             }
         }
         die( 0 );
+    }
+
+
+    /**
+     * Add Assets in Admin
+     */
+    public function mailServiceCustomAdminStyle()
+    {
+        wp_enqueue_style(
+            'custom-style-mail-service',
+            MAIL_SERVICE_DIRECTORY_PLUGIN_URL . 'assets/css/custom-style.css'
+        );
+        wp_register_script(
+            'custom-script-mail-service',
+            MAIL_SERVICE_DIRECTORY_PLUGIN_URL . 'assets/scripts/customScript.js',
+            array(),
+            '1.0.0',
+            true
+        );
+        // Localize the script with new data
+        $translation_array = array(
+            'URL' => admin_url( 'admin-ajax.php' ),
+        );
+        wp_localize_script( 'custom-script-mail-service', 'ADMIN_AJAX', $translation_array );
+        // Enqueued script with localized data.
+        wp_enqueue_script( 'custom-script-mail-service' );
     }
 
 }

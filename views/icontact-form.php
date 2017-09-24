@@ -38,16 +38,44 @@ if ( isset( $addMsg ) ) {
         </button>
     </div>
 <?php } ?>
+<br/>
+<br/>
+<table  class="widefat">
 
+    <tr>
+        <td>
+            <div>
+                <h2>How can I got this details</h2>
+                <ul>
+                    <li>Logged in to IContact Dashboard.</li>
+                    <li><a href="https://app.icontact.com/icp/core/registerapp">Create API Keys</a></li>
+                    <li><a href="https://app.icontact.com/icp/core/externallogin">Create your external login details</a></li>
+                </ul>
+            </div>
+        </td>
+    </tr>
+</table>
 <table class="wrap" style="width: 100%">
     <tr>
         <td>
 
 
         </td>
+        <td>
+
+
+        </td><td>
+
+
+        </td><td>
+
+
+        </td>
+
+
     </tr>
     <tr>
-        <td colspan="4">
+        <td colspan="2">
 
 
             <form method="POST" action="<?php echo admin_url( 'admin-ajax.php' ); ?>">
@@ -58,7 +86,7 @@ if ( isset( $addMsg ) ) {
                 <input name="user_id" value="<?= $user_id; ?>" type="hidden"/>
                 <input name="id" value="<?= $id; ?>" type="hidden"/>
 
-                <table class="widefat">
+                <table class="widefat" style="height: 330px;">
 
                     <thead>
 
@@ -150,6 +178,7 @@ if ( isset( $addMsg ) ) {
 
 
         </td>
+
     </tr>
     <?php if ( $mailServiceIContact ) { ?>
         <?php
@@ -233,3 +262,5 @@ if ( isset( $addMsg ) ) {
         </tr>
     <?php } ?>
 </table>
+
+
