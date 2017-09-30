@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Import Users to IContact
  * Plugin URI:
- * Description: This plugins will add import button into users listing and also admin can import all users to IContact.
+ * Description: This plugins will add import button into users listing and also admin can bulk import all users to IContact.
  * Version: 1.0
  * Author: Ankit Gupta, Rahul Gupta
  * Author URI:
