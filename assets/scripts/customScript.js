@@ -1,53 +1,53 @@
 jQuery(document).on('ready', function () {
 
     // Click on element with 'popup' class
-    jQuery('.openPopUpListing').on('click', function () {
+    jQuery('.IUTIOpenPopUpListing').on('click', function () {
 
         var userID = jQuery(this).data('userid');
         var _this = this;
         jQuery(this).children('img').css('display', 'block');
-        jQuery('<div id="openPopUpListingModal" class="modal"></div>').appendTo('body')
-            .load(ADMIN_AJAX.URL + '?action=openPopUpImportWizard&userID=' + userID, function () {
+        jQuery('<div id="IUTIOpenPopUpListingModal" class="IUTII-modal"></div>').appendTo('body')
+            .load(ADMIN_AJAX.URL + '?action=IUTIOpenPopUpImportWizard&userID=' + userID, function () {
                 jQuery(_this).children('img').css('display', 'none');
             }).show();
         return false;
 
     });
 
-    jQuery('.notice-dismiss').click(function () {
+    jQuery('.iuti-notice-dismiss').click(function () {
         jQuery(this).parent('div').remove();
     });
 });
-jQuery('body').on('click', '.closeModalListing', function () {
-    jQuery('#openPopUpListingModal').remove();
+jQuery('body').on('click', '.IUTICloseModalListing', function () {
+    jQuery('#IUTIOpenPopUpListingModal').remove();
 });
 
-jQuery('body').on('submit', '#IContactImportForm', function (event) {
+jQuery('body').on('submit', '#IUTIIContactImportForm', function (event) {
     event.preventDefault();
-    jQuery('#IContactImportFormSubmit').attr('disabled', 'disabled').addClass('disabled');
-    jQuery('#loaderImage').css('display', 'block');
+    jQuery('#IUTIIContactImportFormSubmit').attr('disabled', 'disabled').addClass('disabled');
+    jQuery('#IUTILoaderImage').css('display', 'block');
     jQuery.ajax({
-        data: {action: 'triggerIContactImport', formData: jQuery("#IContactImportForm").serialize()},
+        data: {action: 'IUTITriggerIContactImport', formData: jQuery("#IUTIIContactImportForm").serialize()},
         type: 'POST',
         url: ADMIN_AJAX.URL,
         dataType: 'json',
         success: function (data) {
-            jQuery('#IContactImportFormSubmit').removeAttr('disabled').removeClass('disabled');
-            jQuery('#IContactImportForm').css('display', 'none');
-            jQuery('#IContactImportFormDiv').html(data.msg).css('display', 'block');
+            jQuery('#IUTIIContactImportFormSubmit').removeAttr('disabled').removeClass('disabled');
+            jQuery('#IUTIIContactImportForm').css('display', 'none');
+            jQuery('#IUTIIContactImportFormDiv').html(data.msg).css('display', 'block');
             if (data.status === 'error') {
-                jQuery('#IContactImportFormDiv').addClass('error');
+                jQuery('#IUTIIContactImportFormDiv').addClass('error');
             } else {
-                jQuery('#IContactImportFormDiv').addClass('success');
+                jQuery('#IUTIIContactImportFormDiv').addClass('success');
             }
             setTimeout(function () {
-                jQuery('#openPopUpListingModal').remove();
+                jQuery('#IUTIOpenPopUpListingModal').remove();
             }, 5000);
         },
         error: function (err) {
-            jQuery('#IContactImportFormDiv').addClass('error');
-            jQuery('#IContactImportFormDiv').html(err);
-            jQuery('#loaderImage').css('display', 'none');
+            jQuery('#IUTIIContactImportFormDiv').addClass('error');
+            jQuery('#IUTIIContactImportFormDiv').html(err);
+            jQuery('#IUTILoaderImage').css('display', 'none');
         }
     });
 });

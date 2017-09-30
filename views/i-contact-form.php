@@ -25,7 +25,7 @@ if ( isset( $addMsg ) ) {
     ?>
     <div id="message" class="updated notice is-dismissible">
         <p><?php echo $addMsg; ?></p>
-        <button type="button" class="notice-dismiss"><span class="screen-reader-text">Dismiss this notice.</span>
+        <button type="button" class="notice-dismiss iuti-notice-dismiss"><span class="screen-reader-text">Dismiss this notice.</span>
         </button>
     </div>
 <?php } ?>
@@ -34,22 +34,34 @@ if ( isset( $addMsg ) ) {
     ?>
     <div id="message" class="error notice is-dismissible">
         <p><?php echo $errorMsg; ?></p>
-        <button type="button" class="notice-dismiss"><span class="screen-reader-text">Dismiss this notice.</span>
+        <button type="button" class="notice-dismiss iuti-notice-dismiss"><span class="screen-reader-text">Dismiss this notice.</span>
         </button>
     </div>
 <?php } ?>
 <br/>
 <br/>
-<table  class="widefat">
+<table class="widefat">
 
     <tr>
         <td>
             <div>
                 <h2>How can I got this details</h2>
                 <ul>
-                    <li>Logged in to IContact Dashboard.</li>
-                    <li><a href="https://app.icontact.com/icp/core/registerapp">Create API Keys</a></li>
-                    <li><a href="https://app.icontact.com/icp/core/externallogin">Create your external login details</a></li>
+                    <li>
+                        <a href="https://www.icontact.com/login" target="_blank">
+                            Logged in to IContact Dashboard.
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://app.icontact.com/icp/core/registerapp" target="_blank">
+                            Create API Keys
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://app.icontact.com/icp/core/externallogin" target="_blank">
+                            Create your external login details
+                        </a>
+                    </li>
                 </ul>
             </div>
         </td>
@@ -64,10 +76,12 @@ if ( isset( $addMsg ) ) {
         <td>
 
 
-        </td><td>
+        </td>
+        <td>
 
 
-        </td><td>
+        </td>
+        <td>
 
 
         </td>
@@ -80,9 +94,9 @@ if ( isset( $addMsg ) ) {
 
             <form method="POST" action="<?php echo admin_url( 'admin-ajax.php' ); ?>">
 
-                <?php wp_nonce_field( 'saveIContactIntegration', 'ANKIT_GUPTA_RAHUL_GUPTA' ); ?>
+                <?php wp_nonce_field( 'IUTISaveIContactIntegration', 'ANKIT_GUPTA_RAHUL_GUPTA' ); ?>
 
-                <input name="action" value="saveIContactIntegration" type="hidden"/>
+                <input name="action" value="IUTISaveIContactIntegration" type="hidden"/>
                 <input name="user_id" value="<?= $user_id; ?>" type="hidden"/>
                 <input name="id" value="<?= $id; ?>" type="hidden"/>
 
@@ -94,7 +108,7 @@ if ( isset( $addMsg ) ) {
 
                         <th colspan="2">
 
-                            <h3> <?php esc_html_e( 'Fill  IContact Details', 'Mail_Service_Admin_Settings' ); ?></h3>
+                            <h3> <?php esc_html_e( 'Fill  IContact Details', 'IUTI_Admin_Settings' ); ?></h3>
 
                         </th>
 
@@ -110,7 +124,7 @@ if ( isset( $addMsg ) ) {
                         <td>
 
                             <h3>
-                                <?php esc_html_e( 'API ID:', 'Mail_Service_Admin_Settings' ); ?>
+                                <?php esc_html_e( 'API ID:', 'IUTI_Admin_Settings' ); ?>
                             </h3>
                         </td>
 
@@ -127,7 +141,7 @@ if ( isset( $addMsg ) ) {
                         <td>
 
                             <h3>
-                                <?php esc_html_e( 'API Username:', 'Mail_Service_Admin_Settings' ); ?>
+                                <?php esc_html_e( 'API Username:', 'IUTI_Admin_Settings' ); ?>
                             </h3>
                         </td>
 
@@ -145,7 +159,7 @@ if ( isset( $addMsg ) ) {
                         <td>
 
                             <h3>
-                                <?php esc_html_e( 'API Password:', 'Mail_Service_Admin_Settings' ); ?>
+                                <?php esc_html_e( 'API Password:', 'IUTI_Admin_Settings' ); ?>
                             </h3>
                         </td>
 
@@ -182,7 +196,7 @@ if ( isset( $addMsg ) ) {
     </tr>
     <?php if ( $mailServiceIContact ) { ?>
         <?php
-        $callHook = new CallHooks();
+        $callHook = new IUTIRegisterHooks();
         $lists    = $callHook->getIContactListDetails();
         ?>
         <tr>
@@ -191,9 +205,9 @@ if ( isset( $addMsg ) ) {
 
                 <form method="POST" action="<?php echo admin_url( 'admin-ajax.php' ); ?>">
 
-                    <?php wp_nonce_field( 'bulkImportUsers', 'ANKIT_GUPTA_RAHUL_GUPTA' ); ?>
+                    <?php wp_nonce_field( 'IUTIBulkImportUsers', 'ANKIT_GUPTA_RAHUL_GUPTA' ); ?>
 
-                    <input name="action" value="bulkImportUsers" type="hidden"/>
+                    <input name="action" value="IUTIBulkImportUsers" type="hidden"/>
                     <input name="user_id" value="<?= $user_id; ?>" type="hidden"/>
 
                     <table class="widefat">
@@ -206,7 +220,7 @@ if ( isset( $addMsg ) ) {
 
                                 <h3> <?php esc_html_e(
                                         'Import All Users in IContact',
-                                        'Mail_Service_Admin_Settings'
+                                        'IUTI_Admin_Settings'
                                     ); ?></h3>
 
                             </th>
@@ -223,7 +237,7 @@ if ( isset( $addMsg ) ) {
                             <td>
 
                                 <h3>
-                                    <?php esc_html_e( 'Lists:', 'Mail_Service_Admin_Settings' ); ?>
+                                    <?php esc_html_e( 'Lists:', 'IUTI_Admin_Settings' ); ?>
                                 </h3>
                             </td>
 

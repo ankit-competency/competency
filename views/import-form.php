@@ -3,11 +3,11 @@ if ( !defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly
 }
 ?>
-<div class="IContactImportForm modal-content">
-    <span class="close closeModalListing">&times;</span>
+<div class="IUTIIContactImportForm IUTII-modal-content">
+    <span class="close IUTICloseModalListing">&times;</span>
     <div>
-        <div class="alert" id="IContactImportFormDiv" style="display: none;"></div>
-        <form method="POST" id="IContactImportForm" name="IContactImportForm">
+        <div class="alert" id="IUTIIContactImportFormDiv" style="display: none;"></div>
+        <form method="POST" id="IUTIIContactImportForm" name="IUTIIContactImportForm">
             <input type="hidden" name="user_id" value="<?php echo $userId; ?>"/>
             <label for="fname">First Name</label>
             <input type="text" id="fname" name="firstname" value="<?php echo $importUserData[ 'first_name' ] ?>"
@@ -29,9 +29,9 @@ if ( !defined( 'ABSPATH' ) ) {
                     } ?> ><?php echo $list->name; ?></option>
                 <?php } ?>
             </select>
-            <Button type="submit" class="IContactImportFormButton" id="IContactImportFormSubmit">
-                <img id="loaderImage" style="display: none;"
-                     src="<?php echo MAIL_SERVICE_DIRECTORY_PLUGIN_URL . 'assets/img/loading-gif.gif'; ?>"/>
+            <Button type="submit" class="IUTIIContactImportFormButton" id="IUTIIContactImportFormSubmit">
+                <img id="IUTILoaderImage" style="display: none;"
+                     src="<?php echo IUTI_DIRECTORY_PLUGIN_URL . 'assets/img/loading-gif.gif'; ?>"/>
                 Submit
             </Button>
         </form>

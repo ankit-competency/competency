@@ -2,18 +2,12 @@
 /**
  * Creates the submenu page for the plugin.
  *
- * @package Custom_Admin_Settings
- */
-
-/**
- * Creates the submenu page for the plugin.
- *
  * Provides the functionality necessary for rendering the page corresponding
  * to the submenu with which this page is associated.
  *
- * @package Mail_Service_Admin_Settings
+ * @package IUTI_Admin_Settings
  */
-class SubMenuPage extends Menu
+class IUTISubMenu extends IUTIMenu
 {
     const PAGE_TITLE = 'IContact Integration';
     const MENU_TITLE = 'IContact Service';
