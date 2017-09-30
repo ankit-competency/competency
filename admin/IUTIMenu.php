@@ -1,24 +1,19 @@
 <?php
-/**
- * Creates the submenu item for the plugin.
- *
- * @package Mail_Service_Admin_Settings
- */
 
 /**
- * Creates the submenu item for the plugin.
+ * Creates the menu item for the plugin.
  *
  * Registers a new menu item under 'Tools' and uses the dependency passed into
  * the constructor in order to display the page corresponding to this menu item.
  *
- * @package Mail_Service_Admin_Settings
+ * @package IUTI_Admin_Settings
  */
-class Menu
+class IUTIMenu
 {
 
     const MENU_SLUG       = 'mail-service-setting';
-    const MENU_PAGE_TITLE = 'Mail Service Integration';
-    const MENU_TITLE      = 'Mail Service Integration';
+    const MENU_PAGE_TITLE = 'Mail Service';
+    const MENU_TITLE      = 'Mail Service';
 
     /**
      * Adds a menu for this plugin to the 'Tools' menu.
@@ -32,8 +27,6 @@ class Menu
                 'addMailServiceMenu'
             )
         );
-        //add_action('admin_enqueue_scripts', 'my_admin_theme_style');
-       // add_action('login_enqueue_scripts', 'my_admin_theme_style');
     }
 
     /**
@@ -50,14 +43,14 @@ class Menu
             array(
                 $this,
                 'renderForm'
-            )
+            ),
+            'dashicons-email-alt'
         );
     }
 
-    public function renderForm(){
-        include(MAIL_SERVICE_DIRECTORY_PLUGIN_DIR.'views/icontact-form.php');
+    public function renderForm()
+    {
+        include( IUTI_DIRECTORY_PLUGIN_DIR . 'views/i-contact-form.php' );
     }
-
-   
 
 }

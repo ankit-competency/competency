@@ -1,6 +1,6 @@
 <?php
 
-class importDefaultTables
+class IUTIImportDefaultTables
 {
 
     public function createPluginDatabaseTable()
@@ -27,4 +27,3 @@ class importDefaultTables
     }
 
 }
-
