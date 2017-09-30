@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Creates the menu item for the plugin.
  *
@@ -42,14 +43,14 @@ class IUTIMenu
             array(
                 $this,
                 'renderForm'
-            )
+            ),
+            'dashicons-email-alt'
         );
     }
 
-    public function renderForm(){
-        include(IUTI_DIRECTORY_PLUGIN_DIR.'views/i-contact-form.php');
+    public function renderForm()
+    {
+        include( IUTI_DIRECTORY_PLUGIN_DIR . 'views/i-contact-form.php' );
     }
-
-   
 
 }

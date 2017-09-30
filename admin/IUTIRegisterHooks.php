@@ -2,10 +2,10 @@
 
 class IUTIRegisterHooks
 {
-    const SUCCESS = 'success';
-    const ERROR   = 'error';
+    const SUCCESS          = 'success';
+    const ERROR            = 'error';
     const SCRIPT_I_CONTACT = 'script-i-contact';
-    const STYLE_I_CONTACT= 'style-i-contact';
+    const STYLE_I_CONTACT  = 'style-i-contact';
 
     /**
      * Call all required features to WordPress Admin
@@ -245,8 +245,7 @@ class IUTIRegisterHooks
                         }
                         $displayUrl = $required . "&addMsg=$act Successfully.";
                     } else {
-                        $displayUrl = $required .
-                                      '&errorMsg=Current user does not exists. please try with other user.';
+                        $displayUrl = $required . '&errorMsg=Current user does not exists. please try with other user.';
                     }
                 } else {
                     $displayUrl = $required .
@@ -284,9 +283,10 @@ class IUTIRegisterHooks
     public function getIContactDetailsOfCurrentUser()
     {
         global $wpdb;
-        $table_name          = $wpdb->prefix . "ecti_i_contact_setting";
-        $user_id             = get_current_user_id();
-        return  $wpdb->get_row(
+        $table_name = $wpdb->prefix . "ecti_i_contact_setting";
+        $user_id    = get_current_user_id();
+
+        return $wpdb->get_row(
             $wpdb->prepare( "SELECT * FROM $table_name where user_id= %d", $user_id ),
             ARRAY_A
         );
@@ -308,9 +308,9 @@ class IUTIRegisterHooks
         }
         $loaderIcon = '<img id="IUTIImportLoaderImage" style="display: none;" src="' . IUTI_DIRECTORY_PLUGIN_URL .
                       'assets/img/loading-gif.gif" />';
+
         return '<a href="javascript:void(0)"  data-userId="' . $user_id .
-                      '"class="button button-primary button-large IUTIOpenPopUpListing">' . $loaderIcon .
-                      ' Import User</a>';
+               '"class="button button-primary button-large IUTIOpenPopUpListing">' . $loaderIcon . ' Import User</a>';
     }
 
     /**
@@ -331,7 +331,8 @@ class IUTIRegisterHooks
     public function getIContactListDetails()
     {
         $iContactApi = $this->initiateIContactObject();
-        return  $iContactApi->getLists();
+
+        return $iContactApi->getLists();
     }
 
     /**
@@ -362,14 +363,14 @@ class IUTIRegisterHooks
     {
         if ( isset( $_POST[ 'formData' ] ) ) {
             parse_str( $_POST[ 'formData' ], $formData );
-            $iContactLists = $this->getIContactListDetails();
-            $listIdSet     = [ ];
-            foreach ( $iContactLists as $list ) {
-                $listIdSet[] = $list->listId;
-            }
             $importUserID   = intval( $formData[ 'user_id' ] );
             $iContactListID = intval( $formData[ 'i_contact_list' ] );
             if ( get_user_by( 'id', $importUserID ) ) {
+                $iContactLists = $this->getIContactListDetails();
+                $listIdSet     = [ ];
+                foreach ( $iContactLists as $list ) {
+                    $listIdSet[] = $list->listId;
+                }
                 $importUserData = $this->getImportUserDetails( $importUserID );
                 if ( in_array( $iContactListID, $listIdSet ) ) {
                     $importUsersData[] = $importUserData;

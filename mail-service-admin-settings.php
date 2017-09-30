@@ -39,6 +39,3 @@ function IUTICustomAdminSettings()
     $hooks->init();
 
 }
-
-
-
