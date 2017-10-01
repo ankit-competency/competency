@@ -6,7 +6,7 @@ jQuery(document).on('ready', function () {
         var userID = jQuery(this).data('userid');
         var _this = this;
         jQuery(this).children('img').css('display', 'block');
-        jQuery('<div id="IUTIOpenPopUpListingModal" class="IUTII-modal"></div>').appendTo('body')
+        jQuery('<div id="IUTIOpenPopUpListingModal" class="IUTI-modal"></div>').appendTo('body')
             .load(ADMIN_AJAX.URL + '?action=IUTIOpenPopUpImportWizard&userID=' + userID, function () {
                 jQuery(_this).children('img').css('display', 'none');
             }).show();

@@ -2,8 +2,10 @@
 if ( !defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly
 }
-?>
-<?php
+if (!current_user_can( 'manage_options' ) ) {
+    exit;
+}
+
 global $wpdb;
 $table_name          = $wpdb->prefix . "ecti_i_contact_setting";
 $user_id             = get_current_user_id();

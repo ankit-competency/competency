@@ -5,7 +5,7 @@
  * Description: This plugins will add import button into users listing and also admin can bulk import all users to IContact.
  * Version: 1.0
  * Author: Ankit Gupta, Rahul Gupta
- * Author URI:
+ * Author URI: https://github.com/ankit-competency/
  * License: GPL2
  */
 // If this file is called directly, abort.
