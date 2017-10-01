@@ -12,7 +12,7 @@ div.error, div.updated {
 }
 
 /* The Modal (background) */
-.IUTII-modal {
+.IUTI-modal {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
     z-index: 999999; /* Sit on top */
@@ -27,7 +27,7 @@ div.error, div.updated {
 }
 
 /* Modal Content */
-.IUTII-modal-content {
+.IUTI-modal-content {
     background-color: #fefefe;
     margin: auto;
     padding: 20px;
@@ -50,7 +50,7 @@ div.error, div.updated {
     cursor: pointer;
 }
 
-.IUTII-modal-content input[type=text], .IUTII-modal-content select {
+.IUTI-modal-content input[type=text], .IUTI-modal-content select {
     width: 100%;
     padding: 12px 20px;
     margin: 8px 0;
@@ -61,7 +61,7 @@ div.error, div.updated {
     height: 100%;
 }
 
-.IUTII-modal-content button[type=submit] {
+.IUTI-modal-content button[type=submit] {
     width: 100%;
     background-color: #4CAF50;
     color: white;
@@ -72,11 +72,11 @@ div.error, div.updated {
     cursor: pointer;
 }
 
-.IUTII-modal-content button[type=submit]:hover {
+.IUTI-modal-content button[type=submit]:hover {
     background-color: #45a049;
 }
 
-.IUTII-modal-content div {
+.IUTI-modal-content div {
     border-radius: 5px;
     background-color: #f2f2f2;
     padding: 20px;

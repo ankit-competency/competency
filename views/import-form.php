@@ -2,8 +2,9 @@
 if ( !defined( 'ABSPATH' ) ) {
     exit; // Exit if accessed directly
 }
+if (current_user_can( 'manage_options' ) ) {
 ?>
-<div class="IUTIIContactImportForm IUTII-modal-content">
+<div class="IUTIIContactImportForm IUTI-modal-content">
     <span class="close IUTICloseModalListing">&times;</span>
     <div>
         <div class="alert" id="IUTIIContactImportFormDiv" style="display: none;"></div>
@@ -38,3 +39,4 @@ if ( !defined( 'ABSPATH' ) ) {
     </div>
 
 </div>
+<?php } ?>
